@@ -83,13 +83,13 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
 
     }
 
-    public synchronized String connect(final String user, final String pass, final String domain,final String proxy, final CallbackContext callbackContext){
+    public synchronized Boolean connect(final String user, final String pass, final String domain,final String proxy, final CallbackContext callbackContext){
 
 
         return pjsipActivity.connect(user,pass,domain,proxy, callbackContext);
 
     }
-    public synchronized String disconnect(final CallbackContext callbackContext){
+    public synchronized Boolean disconnect(final CallbackContext callbackContext){
 
         return pjsipActivity.disconnect(callbackContext);
 

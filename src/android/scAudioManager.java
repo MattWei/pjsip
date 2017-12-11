@@ -7,7 +7,7 @@ import android.media.ToneGenerator;
 import android.util.Log;
 import android.media.MediaPlayer;
 
-import com.navarino.infinity4u.R;
+import io.ionic.starter.R;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;

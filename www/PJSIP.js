@@ -52,7 +52,7 @@ PJSIP.prototype.acceptCall = function(success, error) {
     exec(success, error, "PJSIP", "acceptcall", []);
 };
 
-PJSIP.prototype.callState = function(arg0,success, error) {
+PJSIP.prototype.callState = function(arg0, success, error) {
 
   switch (arg0.state){
     case "outcall":
@@ -70,6 +70,28 @@ PJSIP.prototype.callState = function(arg0,success, error) {
   }
 };
 
+
+PJSIP.prototype.regState = function(arg0, success, error) {
+    /*
+      switch (arg0.code){
+        case "outcall":
+          this.stateCallOut(arg0.outGoingCallNumber);
+          break;
+        case "established":
+          this.stateCallEstablished();
+          break;
+        case "endcall":
+          this.stateCallEnd();
+          break;
+        case "incall":
+          this.stateCallIn(arg0.inComingCallNumber);
+          break;
+      }
+      */
+    //console.log("###########PJSIP.prototype.regState" + arg0);
+    this.accountRegStatus(arg0.code, arg0.reason, arg0.expiration);
+};
+
 PJSIP.prototype.actions = function(arg0,success, error) {
 
   switch (arg0.action){
@@ -84,6 +106,6 @@ PJSIP.prototype.stateCallEstablished = function(){}
 PJSIP.prototype.stateCallEnd = function(){}
 PJSIP.prototype.stateCallIn = function(arg0){}
 PJSIP.prototype.requestPermission = function(arg0){}
-
+PJSIP.prototype.accountRegStatus = function(code, reason, expiration) {}
 
 module.exports = new PJSIP();

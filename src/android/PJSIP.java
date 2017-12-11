@@ -49,7 +49,7 @@ import android.util.Log;
 import gr.navarino.cordova.plugin.Utils;
 
 import gr.navarino.cordova.plugin.PjsipActions;
-import gr.navarino.cordova.plugin.PjsipDiagnostic;
+//import gr.navarino.cordova.plugin.PjsipDiagnostic;
 import org.pjsip.pjsua2.*;
 
 
@@ -74,7 +74,7 @@ public class PJSIP extends CordovaPlugin {
   public static TelephonyManager telephonyManager = null;
 
   private static PjsipActions  actions = null;
-  private static PjsipDiagnostic diagnostic = new PjsipDiagnostic();
+  //private static PjsipDiagnostic diagnostic = new PjsipDiagnostic();
 
   private Intent incomingCallIntent = null;
   private PendingIntent pendingCallIntent = null;
@@ -276,7 +276,7 @@ public class PJSIP extends CordovaPlugin {
       pjsipProxy = args.getString(3);
 
       if (requestPermissions()){
-        actions.connect(pjsipUser,pjsipPass,pjsipDomain,pjsipProxy, callbackContext);
+        return actions.connect(pjsipUser,pjsipPass,pjsipDomain,pjsipProxy, callbackContext);
       }else{
         callbackContext.error("Not appropriate permissions.");
       };
@@ -334,11 +334,11 @@ public class PJSIP extends CordovaPlugin {
 
     }else if (action.equals("checkarchitecture")){
 
-      diagnostic.checkArchitecture(callbackContext);
+      //diagnostic.checkArchitecture(callbackContext);
 
     }else if (action.equals("checkclientip")){
 
-      diagnostic.checkClientIP(callbackContext);
+      //diagnostic.checkClientIP(callbackContext);
 
     }else if (action.equals("checkpbxconnectivity")){
 
@@ -357,7 +357,7 @@ public class PJSIP extends CordovaPlugin {
 
         }
     }else if (action.equals("checkaudio")){
-      diagnostic.checkAudio(callbackContext);
+      //diagnostic.checkAudio(callbackContext);
     }else if (action.equals("getwifissid")){
 
       String ssid = utils.getWifiSSID();
@@ -374,7 +374,7 @@ public class PJSIP extends CordovaPlugin {
         @Override
         public void run() {
 
-          diagnostic.checkPBXfirewall(host,port,callbackContext);
+          //diagnostic.checkPBXfirewall(host,port,callbackContext);
 
         }
       });

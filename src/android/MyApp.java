@@ -151,7 +151,8 @@ public class MyApp {
                 ~(pj_log_decoration.PJ_LOG_HAS_CR.swigValue() |
                         pj_log_decoration.PJ_LOG_HAS_NEWLINE.swigValue()));
 
-	/* Set ua config. */
+    /* Set ua config. */
+    /*
         UaConfig ua_cfg = epConfig.getUaConfig();
         ua_cfg.setUserAgent("Pjsua2 Android " + ep.libVersion().getFull());
         StringVector stun_servers = new StringVector();
@@ -161,7 +162,7 @@ public class MyApp {
             ua_cfg.setThreadCnt(0);
             ua_cfg.setMainThreadOnly(true);
         }
-
+        */
 	/* Init endpoint */
         try {
             ep.libInit(epConfig);
@@ -177,14 +178,14 @@ public class MyApp {
             Log.e(TAG,"Error:"+e.toString());
 
         }
-
+/*
         try {
             ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_TCP,
                     sipTpConfig);
         } catch (Exception e) {
             Log.e(TAG,"Error:"+e.toString());
         }
-
+*/
 	/* Create accounts. */
         for (int i = 0; i < accCfgs.size(); i++) {
             MyAccountConfig my_cfg = accCfgs.get(i);

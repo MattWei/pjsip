@@ -1,31 +1,56 @@
 {
-  "name": "cordova.plugins.PJSIP",
-  "version": "0.0.2",
-  "description": "VOIP based on PJSIP.",
-  "repository": {
+  "_from": "git+https://github.com/MattWei/pjsip.git",
+  "_id": "cordova.plugins.PJSIP@0.0.2",
+  "_inBundle": false,
+  "_integrity": "sha1-NpGzSCOPAZXOyItwWySqswztiiw=",
+  "_location": "/cordova.plugins.PJSIP",
+  "_phantomChildren": {},
+  "_requested": {
     "type": "git",
-    "url": "git+https://github.com/symeonmattes/pjsip.git"
+    "raw": "https://github.com/MattWei/pjsip.git",
+    "rawSpec": "https://github.com/MattWei/pjsip.git",
+    "saveSpec": "git+https://github.com/MattWei/pjsip.git",
+    "fetchSpec": "https://github.com/MattWei/pjsip.git",
+    "gitCommittish": "master"
   },
-  "keywords": [
-    "appplant",
-    "background",
-    "cordova",
-    "ecosystem:cordova"
+  "_requiredBy": [
+    "#USER",
+    "/"
   ],
-  "platforms": [
-    "ios",
-    "android"
-  ],
+  "_resolved": "git+https://github.com/MattWei/pjsip.git#8049524919735b6ec4872310104e623065e2317d",
+  "_spec": "https://github.com/MattWei/pjsip.git",
+  "_where": "/home/weiminji/workspace/sources/ionicProject/IntevioSip",
+  "author": {
+    "name": "Symeon Mattes"
+  },
+  "bugs": {
+    "url": "https://github.com/symeonmattes/pjsip/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "VOIP based on PJSIP.",
   "engines": [
     {
       "name": "cordova",
       "version": ">=4.0.0"
     }
   ],
-  "author": "Symeon Mattes",
+  "homepage": "https://github.com/symeonmattes/pjsip#readme",
+  "keywords": [
+    "appplant",
+    "background",
+    "cordova",
+    "ecosystem:cordova"
+  ],
   "license": "Apache 2.0",
-  "bugs": {
-    "url": "https://github.com/symeonmattes/pjsip/issues"
+  "name": "cordova.plugins.PJSIP",
+  "platforms": [
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/symeonmattes/pjsip.git"
   },
-  "homepage": "https://github.com/symeonmattes/pjsip#readme"
+  "version": "0.0.2"
 }
