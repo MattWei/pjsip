@@ -51,20 +51,47 @@ public class  MyAccount extends Account
                 } catch (Exception e) {}
         }
 
+        addBuddy(bud);
         return bud;
     }
 
     public void delBuddy(MyBuddy buddy)
     {
         buddyList.remove(buddy);
+        removeBuddy(buddy);
         buddy.delete();
     }
 
     public void delBuddy(int index)
     {
         MyBuddy bud = buddyList.get(index);
-        buddyList.remove(index);
-        bud.delete();
+        delBuddy(bud);
+    }
+
+    public MyBuddy getBuddy(String buddyUrl) throws Exception
+    {
+        for (int i = 0; i < buddyList.size(); ++i) {
+            MyBuddy bud = buddyList.get(i);
+            if (bud.getInfo().getUri().equals(buddyUrl)) {
+                Log.d("MyAccount", "get buddy " + buddyUrl);
+                return bud;
+            }
+        }
+
+        BuddyConfig cfg = new BuddyConfig();
+        cfg.setUri(buddyUrl);
+        return addBuddy(cfg);
+    }
+
+    public void deleteBuddy(String buddyUrl) throws Exception
+    {
+        for (int i = 0; i < buddyList.size(); ++i) {
+            MyBuddy bud = buddyList.get(i);
+            if (bud.getInfo().getUri().equals(buddyUrl)) {
+                Log.d("MyAccount", "remove buddy " + buddyUrl);
+                delBuddy(bud);
+            }
+        }
     }
 
     @Override
@@ -90,5 +117,7 @@ public class  MyAccount extends Account
         Log.d(TAG,"Contact  : " + prm.getContactUri());
         Log.d(TAG,"Mimetype : " + prm.getContentType());
         Log.d(TAG,"Body     : " + prm.getMsgBody());
+
+        MyApp.observer.notifyInstantMessage(prm);
     }
 }

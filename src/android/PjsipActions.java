@@ -29,6 +29,10 @@ import gr.navarino.cordova.plugin.scAudioManager;
 import gr.navarino.cordova.plugin.PjsipActivity;
 import gr.navarino.cordova.plugin.Utils;
 
+import com.honeywell.sip.PlayOption;
+
+import java.util.ArrayList;
+
 /**
  * Created by infuser on 10/04/17.
  * A singleton class to handles the calls
@@ -193,5 +197,63 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
         });
 
 
+    }
+
+    public synchronized void sendInstantMessage(final String buddy, final String message, final CallbackContext callbackContext){
+
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                pjsipActivity.sendInstantMessage(buddy, message, callbackContext);
+            }
+        });
+    }
+
+    public void addBuddy(final String buddy, final CallbackContext callbackContext){
+        try{
+            pjsipActivity.addBuddy(buddy);
+            if (callbackContext!=null)
+                callbackContext.success();
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+
+    public void deleteBuddy(final String buddy, final CallbackContext callbackContext){
+        try{
+            pjsipActivity.deleteBuddy(buddy);
+            if (callbackContext!=null)
+                callbackContext.success();
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+
+    public synchronized void makeFilesCall(final String number, final ArrayList<String> playlist, 
+                                        final PlayOption option, final CallbackContext callbackContext){
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                pjsipActivity.makeFilesCall(number, playlist, option, callbackContext);
+            }
+        });
+    }
+
+    public void changePlayingSong(final int index, final CallbackContext callbackContext) {
+        try{
+            pjsipActivity.changePlayingSong(index, callbackContext);
+            if (callbackContext!=null)
+                callbackContext.success();
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+
+    public void changeFilesCallRepeatType(final int type, final CallbackContext callbackContext) {
+        try{
+            pjsipActivity.changeFilesCallRepeatType(type, callbackContext);
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
     }
 }

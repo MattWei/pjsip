@@ -14,7 +14,7 @@
         </feature>
       </config-file>
 
-      <config-file target="AndroidManifest.xml" parent="/*">
+      <config-file target="app/src/main/AndroidManifest.xml" parent="/*">
           <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
           <!--
@@ -26,21 +26,21 @@
       </config-file>      
       
       <framework src="com.android.support:support-v4:+" />
-      <source-file src="www/sounds/mp3/busytone.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf0.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf1.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf2.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf3.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf4.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf5.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf6.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf7.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf8.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmf9.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmfhash.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/dtmfstar.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/ringbacktone.mp3" target-dir="res/raw/" />
-      <source-file src="www/sounds/mp3/ringtone.mp3" target-dir="res/raw/" />
+      <source-file src="www/sounds/mp3/busytone.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf0.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf1.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf2.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf3.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf4.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf5.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf6.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf7.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf8.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmf9.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmfhash.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/dtmfstar.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/ringbacktone.mp3" target-dir="app/src/main/res/raw/" />
+      <source-file src="www/sounds/mp3/ringtone.mp3" target-dir="app/src/main/res/raw/" />
       
       <source-file src="src/android/PJSIP.java" target-dir="src/gr/navarino/cordova/plugin/PJSIP/" />
       <source-file src="src/android/Utils.java" target-dir="src/gr/navarino/cordova/plugin/PJSIP/" />
@@ -54,8 +54,11 @@
       <source-file src="src/android/MyCall.java" target-dir="src/gr/navarino/cordova/plugin/PJSIP/" />
       <source-file src="src/android/PjsipActivity.java" target-dir="src/gr/navarino/cordova/plugin/PJSIP/" />
       
-      
-      
+      <source-file src="src/android/HonAudioMedia.java" target-dir="src/com/honeywell/sip/" />
+      <source-file src="src/android/HonPlayer.java" target-dir="src/com/honeywell/sip/" />
+      <source-file src="src/android/OnPlayStatusListener.java" target-dir="src/com/honeywell/sip/" />
+      <source-file src="src/android/OnPlayStatusListener.java" target-dir="src/com/honeywell/sip/" />
+      <source-file src="src/android/PlaylistCall.java" target-dir="src/gr/navarino/cordova/plugin/PJSIP/" />
       <!-- <source-file src="src/android/jniLibs/armeabi/libpjsua2.so" target-dir="libs/armeabi" /> -->
       <!-- <source-file src="src/android/jniLibs/arm64-v8a/libpjsua2.so" target-dir="libs/arm64-v8a" /> -->
       
@@ -65,8 +68,9 @@
       
       <!-- https://libraries.io/github/VoiSmart/pjsip-android-builder  -->
       <!-- https://github.com/VoiSmart/pjsip-android-builder -->
-      <source-file src="src/android/jniLibs/armeabi/libpjsua2.so" target-dir="libs/armeabi" />
-      <source-file src="src/android/jniLibs/x86/libpjsua2.so" target-dir="libs/x86" />
+      <source-file src="src/android/jniLibs/armeabi-v7a/libpjsua2.so" target-dir="app/libs/armeabi-v7a" />
+      <source-file src="src/android/jniLibs/x86/libpjsua2.so" target-dir="app/libs/x86" />
+      <source-file src="src/android/jniLibs/x86/libnative-lib.so" target-dir="app/libs/x86" />
       <!-- <source-file src="src/android/jniLibs/x86/libopenh264.so" target-dir="libs/x86" />
       <source-file src="src/android/jniLibs/x86/libyuv.so" target-dir="libs/x86" /> -->
     
@@ -103,6 +107,7 @@
       <source-file src="src/android/api/pjsua2/AccountRegConfig.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/AccountSipConfig.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/AccountVideoConfig.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/AccountIpChangeConfig.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/AudDevManager.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/AudioDevInfo.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/AudioDevInfoVector.java" target-dir="src/org/pjsip/pjsua2" />
@@ -129,6 +134,9 @@
       <source-file src="src/android/api/pjsua2/CodecFmtpVector.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/CodecInfo.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/CodecInfoVector.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/CodecParam.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/CodecParamInfo.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/CodecParamSetting.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/ConfPortInfo.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/ContainerNode.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/Endpoint.java" target-dir="src/org/pjsip/pjsua2" />
@@ -136,6 +144,7 @@
       <source-file src="src/android/api/pjsua2/Error.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/FindBuddyMatch.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/IntVector.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/IpChangeParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/JbufState.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/JsonDocument.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/LogConfig.java" target-dir="src/org/pjsip/pjsua2" />
@@ -169,11 +178,13 @@
       <source-file src="src/android/api/pjsua2/OnCallTsxStateParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnCallTxOfferParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnCreateMediaTransportParam.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/OnCreateMediaTransportSrtpParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnDtmfDigitParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnIncomingCallParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnIncomingSubscribeParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnInstantMessageParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnInstantMessageStatusParam.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/OnIpChangeProgressParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnMwiInfoParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnNatCheckStunServersCompleteParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/OnNatDetectionCompleteParam.java" target-dir="src/org/pjsip/pjsua2" />
@@ -190,15 +201,21 @@
       <source-file src="src/android/api/pjsua2/PersistentObject.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/PresNotifyParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/PresenceStatus.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/RegProgressParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/RtcpSdes.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/RtcpStat.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/RtcpStreamStat.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/RxMsgEvent.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SrtpCrypto.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SWIGTYPE_p_p_void.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SWIGTYPE_p_pj_bool_t.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SWIGTYPE_p_pj_ssize_t.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SWIGTYPE_p_pjmedia_vid_dev_hwnd_type.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SWIGTYPE_p_void.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SWIGTYPE_p_vectorT_pj__SslCertName_t.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SWIGTYPE_p_std__vectorT_pj__MediaFormat_t.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SWIGTYPE_p_vectorT_pj__SrtpCrypto_t.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SWIGTYPE_p_unsigned_char.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SdpSession.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SendInstantMessageParam.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SendTypingIndicationParam.java" target-dir="src/org/pjsip/pjsua2" />
@@ -213,12 +230,15 @@
       <source-file src="src/android/api/pjsua2/SipTransaction.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SipTxData.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/SipTxOption.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SslCertInfo.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/SslCertName.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/StreamInfo.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/StreamStat.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/StringVector.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/TimeVal.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/TimerEvent.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/TlsConfig.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/TlsInfo.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/ToneDesc.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/ToneDescVector.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/ToneDigit.java" target-dir="src/org/pjsip/pjsua2" />
@@ -253,6 +273,7 @@
       <source-file src="src/android/api/pjsua2/pj_qos_params.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pj_qos_type.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pj_qos_wmm_prio.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/pj_ssl_cert_name_type.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pj_ssl_cipher.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pj_ssl_sock_proto.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pj_stun_nat_type.java" target-dir="src/org/pjsip/pjsua2" />
@@ -302,7 +323,9 @@
       <source-file src="src/android/api/pjsua2/pjsua_create_media_transport_flag.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_destroy_flag.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_invalid_id_const_.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/pjsua_ip_change_op.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_ipv6_use.java" target-dir="src/org/pjsip/pjsua2" />
+      <source-file src="src/android/api/pjsua2/pjsua_nat64_opt.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_med_tp_st.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_sip_timer_use.java" target-dir="src/org/pjsip/pjsua2" />
       <source-file src="src/android/api/pjsua2/pjsua_snd_dev_mode.java" target-dir="src/org/pjsip/pjsua2" />

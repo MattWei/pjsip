@@ -2,6 +2,8 @@ package gr.navarino.cordova.plugin;
 
 import org.pjsip.pjsua2.AudioMedia;
 import org.pjsip.pjsua2.Call;
+import org.pjsip.pjsua2.OnDtmfDigitParam;
+
 import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallMediaInfo;
 import org.pjsip.pjsua2.CallMediaInfoVector;
@@ -19,6 +21,8 @@ import org.pjsip.pjsua2.pjsua_call_media_status;
 import gr.navarino.cordova.plugin.MyApp;
 import gr.navarino.cordova.plugin.MyAccount;
 
+import android.util.Log;
+
 /**
  * Created by infuser on 30/03/17.
  */
@@ -31,6 +35,14 @@ public class MyCall extends Call {
     {
         super(acc, call_id);
         vidWin = null;
+    }
+
+    @Override
+    public void onDtmfDigit(OnDtmfDigitParam prm) {
+        super.onDtmfDigit(prm);
+        String digit = prm.getDigit();
+        Log.d("MyCall", "receive dtmf:" + digit);
+        //MyApp.observer.notifyDtmfdiagit(this);
     }
 
     @Override

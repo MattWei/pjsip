@@ -74,6 +74,7 @@ public class MyApp {
             Log.e(TAG,"This could be safely ignored if you " + "don't need video.");
         }
         System.loadLibrary("pjsua2");
+        System.loadLibrary("native-lib");
         Log.d(TAG,"Library loaded");
     }
 
@@ -142,7 +143,10 @@ public class MyApp {
 	/* Override log level setting */
         epConfig.getLogConfig().setLevel(LOG_LEVEL);
         epConfig.getLogConfig().setConsoleLevel(LOG_LEVEL);
-
+        epConfig.getMedConfig().setClockRate(44100);
+        epConfig.getMedConfig().setSndClockRate(44100);
+        //epConfig.getMedConfig().setEcTailLen(0);
+        
 	/* Set log config. */
         LogConfig log_cfg = epConfig.getLogConfig();
         logWriter = new MyLogWriter();
@@ -166,6 +170,14 @@ public class MyApp {
 	/* Init endpoint */
         try {
             ep.libInit(epConfig);
+
+            ep.codecSetPriority("L16/44100/1", (short)139);
+            CodecInfoVector codecVector = ep.codecEnum();
+            for (int i = 0; i < codecVector.size(); ++i) {
+                CodecInfo info = codecVector.get(i);
+                Log.d("codecs", info.getCodecId() + ":" + info.getPriority());
+            }
+            
         } catch (Exception e) {
             return;
         }
@@ -195,6 +207,8 @@ public class MyApp {
             my_cfg.accCfg.getVideoConfig().setAutoTransmitOutgoing(true);
             my_cfg.accCfg.getVideoConfig().setAutoShowIncoming(true);
 
+            my_cfg.accCfg.getRegConfig().setRetryIntervalSec(60);
+            my_cfg.accCfg.getRegConfig().setTimeoutSec(60);
             MyAccount acc = addAcc(my_cfg.accCfg);
             if (acc == null)
                 continue;
@@ -208,6 +222,8 @@ public class MyApp {
 
 	/* Start. */
         try {
+            //ep.codecSetPriority("L16/44100/1", (short) 139);
+            //ep.codecSetPriority("speex", (short) 0);
             ep.libStart();
         } catch (Exception e) {
             return;

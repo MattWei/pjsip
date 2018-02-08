@@ -1,3 +1,4 @@
+cordova.define("gr.navarino.PJSIP.PJSIP", function(require, exports, module) {
 var exec = require('cordova/exec');
 
 function PJSIP() {
@@ -52,6 +53,18 @@ PJSIP.prototype.acceptCall = function(success, error) {
     exec(success, error, "PJSIP", "acceptcall", []);
 };
 
+PJSIP.prototype.sendInstantMessage = function(arg0, arg1, success, error) {
+    exec(success, error, "PJSIP", "sendInstantMessage", [arg0, arg1]);
+};
+
+PJSIP.prototype.addBuddy = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "addBuddy", [arg0]);
+};
+
+PJSIP.prototype.deleteBuddy = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "deleteBuddy", [arg0]);
+};
+
 PJSIP.prototype.callState = function(arg0, success, error) {
 
   switch (arg0.state){
@@ -94,11 +107,19 @@ PJSIP.prototype.regState = function(arg0, success, error) {
 
 PJSIP.prototype.actions = function(arg0,success, error) {
 
-  switch (arg0.action){
+  switch (arg0.action) {
     case "requestpermission":
       this.requestPermission(arg0.success);
       break;
   }
+};
+
+
+PJSIP.prototype.buddyState = function(arg0, success, error) {
+    this.onBuddyState(arg0);
+};
+PJSIP.prototype.instantMessage = function(arg0, success, error) {
+    this.onInstantMessage(arg0);
 };
 
 PJSIP.prototype.stateCallOut = function(arg0){}
@@ -108,4 +129,55 @@ PJSIP.prototype.stateCallIn = function(arg0){}
 PJSIP.prototype.requestPermission = function(arg0){}
 PJSIP.prototype.accountRegStatus = function(code, reason, expiration) {}
 
+PJSIP.prototype.onBuddyState = function(arg0) {}
+PJSIP.prototype.onInstantMessage = function(arg0) {}
+
+
+///////////////Player//////////////////
+PJSIP.prototype.makeFilesCall = function(arg0, arg1, arg2, success, error) {
+    exec(success, error, "PJSIP", "makeFilesCall", [arg0, arg1, arg2]);
+};
+
+PJSIP.prototype.changePlayingSong = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "changePlayingSong", [arg0]);
+}
+
+PJSIP.prototype.changeFilesCallRepeatType = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "changeFilesCallRepeatType", [arg0]);
+};
+
+PJSIP.prototype.addMusicesToPlaylistCall = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "addMusicesToPlaylistCall", [arg0]);
+};
+
+PJSIP.prototype.deleteMusicFromPlaylistCall= function(arg0, success, error) {
+    exec(success, error, "PJSIP", "deleteMusicFromPlaylistCall", [arg0]);
+}
+
+PJSIP.prototype.reorderMusic= function(arg0, arg1, success, error) {
+    exec(success, error, "PJSIP", "reorderMusic", [arg0, arg1]);
+}
+
+
+
+PJSIP.prototype.playStatus = function(arg0, success, error) {
+    switch (arg0.type){
+      case "Start":
+        this.playStart(arg0.index, arg0.param);
+        break;
+      case "Playing":
+        this.playOn(arg0.index, arg0.param);
+        break;
+      case "Finish":
+        this.playFinish(arg0.index);
+        break;
+    }
+};
+
+PJSIP.prototype.playStart = function(arg0, arg1) {}
+PJSIP.prototype.playOn = function(arg0, arg1) {}
+PJSIP.prototype.playFinish = function(arg0) {}
+
 module.exports = new PJSIP();
+
+});

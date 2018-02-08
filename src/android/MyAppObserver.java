@@ -1,7 +1,7 @@
 package gr.navarino.cordova.plugin;
 
 import org.pjsip.pjsua2.pjsip_status_code;
-
+import org.pjsip.pjsua2.OnInstantMessageParam;
 
 import gr.navarino.cordova.plugin.MyCall;
 import gr.navarino.cordova.plugin.MyBuddy;
@@ -18,4 +18,8 @@ interface MyAppObserver
     abstract void notifyCallState(MyCall call);
     abstract void notifyCallMediaState(MyCall call);
     abstract void notifyBuddyState(MyBuddy buddy);
+
+    abstract void notifyInstantMessage(OnInstantMessageParam prm);
+
+    abstract void notifyPlayStatus(String type, int index, int param);
 }

@@ -47,11 +47,11 @@ import gr.navarino.cordova.plugin.scAudioManager;
 
 import android.util.Log;
 import gr.navarino.cordova.plugin.Utils;
-
 import gr.navarino.cordova.plugin.PjsipActions;
 //import gr.navarino.cordova.plugin.PjsipDiagnostic;
 import org.pjsip.pjsua2.*;
 
+import com.honeywell.sip.PlayOption;
 
 public class PJSIP extends CordovaPlugin {
 
@@ -92,20 +92,15 @@ public class PJSIP extends CordovaPlugin {
   static {
     try {
       System.loadLibrary("pjsua2");
-
+      System.loadLibrary("native-lib");
     } catch (UnsatisfiedLinkError e) {
       Log.e(TAG,"UnsatisfiedLinkError: " + e.getMessage());
-
-
     }
 
   }
+
   public PJSIP() {
-
     Log.d("PJSIP", "constructor");
-
-
-
   }
 
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -227,8 +222,6 @@ public class PJSIP extends CordovaPlugin {
   }
 
   public Boolean requestPermissions(){
-
-
     if (!permissionsActive()) {
       cordova.requestPermissions(this, MY_PERMISSIONS_REQUEST_RECORD_AUDIO, new String[]{Manifest.permission.RECORD_AUDIO});
       return false;
@@ -237,8 +230,7 @@ public class PJSIP extends CordovaPlugin {
 
   }
 
-  public Boolean permissionsActive(){
-
+  public Boolean permissionsActive() {
     final Activity thisActivity =  cordova.getActivity();
 
     try{
@@ -379,6 +371,56 @@ public class PJSIP extends CordovaPlugin {
         }
       });
 
+    } else if (action.equals("sendInstantMessage")) {
+      final String buddy = args.getString(0);
+      final String message = args.getString(1);
+      
+      actions.sendInstantMessage(buddy, message, callbackContext);
+    } else if (action.equals("addBuddy")) {
+      final String buddy = args.getString(0);
+
+      actions.addBuddy(buddy, callbackContext);
+    } else if (action.equals("deleteBuddy")) {
+      final String buddy = args.getString(0);
+
+      actions.deleteBuddy(buddy, callbackContext);
+    } else if (action.equals("makeFilesCall")) {
+      final String account = args.getString(0);
+      final ArrayList<String> songs = new ArrayList<String>();
+      JSONArray jsonSongList = args.getJSONArray(1);
+      if (jsonSongList != null) {
+        int len = jsonSongList.length();
+        for (int i = 0; i < len; ++i) {
+          songs.add(jsonSongList.get(i).toString());
+        }
+      }
+
+      //JSONObject optionObject = args.getJSONObject(2);
+      //Log.d("PJSIP", "optionObject:" + optionObject);
+      PlayOption playOption = new PlayOption();
+      playOption.loopOption = 0; //Integer.parseInt(optionObject.getString("loopOption"));
+      playOption.listInterval = 0; //Integer.parseInt(optionObject.getString("listInterval"));
+      playOption.songInterval = 0; //Integer.parseInt(optionObject.getString("songInterval"));
+
+      try {
+        JSONObject optionObject = args.getJSONObject(2);
+        playOption.loopOption = Integer.parseInt(optionObject.getString("loop"));
+        playOption.listInterval = Integer.parseInt(optionObject.getString("listInterval"));
+        playOption.songInterval = Integer.parseInt(optionObject.getString("songInterval"));
+      } catch(Exception e) {
+        Log.d("PJSIP.JAVA", e.getMessage());
+      }
+      Log.d("PJSIP.JAVA", "Get OptionObject OK");
+
+
+      actions.makeFilesCall(account, songs, playOption, callbackContext);
+    } else if (action.equals("changePlayingSong")) {
+      final int index = Integer.parseInt(args.getString(0));
+      actions.changePlayingSong(index, callbackContext);
+    } else if (action.equals("changeFilesCallRepeatType")) {
+      final int type = Integer.parseInt(args.getString(0));
+      Log.d("PJSIP.JAVA", "Change repead type to " + type);
+      actions.changeFilesCallRepeatType(type, callbackContext);
     }
 
     return true;

@@ -11,6 +11,12 @@ import org.pjsip.pjsua2.StringVector;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsip_role_e;
 import org.pjsip.pjsua2.pjsip_status_code;
+import org.pjsip.pjsua2.SendInstantMessageParam;
+import org.pjsip.pjsua2.Buddy;
+import org.pjsip.pjsua2.BuddyConfig;
+import org.pjsip.pjsua2.PresenceStatus;
+import org.pjsip.pjsua2.BuddyInfo;
+import org.pjsip.pjsua2.OnInstantMessageParam;
 
 import android.Manifest;
 import android.app.Activity;
@@ -43,15 +49,17 @@ import gr.navarino.cordova.plugin.MyAccount;
 import gr.navarino.cordova.plugin.MyCall;
 import gr.navarino.cordova.plugin.MyAppObserver;
 import gr.navarino.cordova.plugin.MyBuddy;
-
+import gr.navarino.cordova.plugin.PlaylistCall;
 
 import gr.navarino.cordova.plugin.scAudioManager;
+
+import com.honeywell.sip.PlayOption;
 
 /**
  * Created by infuser on 30/03/17.
  */
 
-public class PjsipActivity implements Handler.Callback,MyAppObserver {
+public class PjsipActivity implements Handler.Callback, MyAppObserver {
 
     static private String TAG = "PjsipActivity";
     static private String outGoingCallNumber="";
@@ -70,7 +78,7 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
 
     private final Handler handler = new Handler(this);
 
-    //private CallbackContext mCallbackContext = null;
+    private CallbackContext mCallbackContext = null;
 
     public class MSG_TYPE
     {
@@ -168,7 +176,7 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
     }
 
     public synchronized Boolean connect(final String user, final String pass, final String systemIP, final String proxyIP,final CallbackContext callbackContext) {
-        //mCallbackContext = callbackContext;
+        mCallbackContext = callbackContext;
 
         String acc_id 	 = "sip:"+user+"@"+systemIP;
         String registrar = "sip:"+user+"@"+systemIP;
@@ -186,6 +194,9 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
         app.checkThread();
         accCfg.setIdUri(acc_id);
         accCfg.getRegConfig().setRegistrarUri(registrar);
+        accCfg.getRegConfig().setRetryIntervalSec(60);
+        accCfg.getRegConfig().setTimeoutSec(60);
+
         AuthCredInfoVector creds = accCfg.getSipConfig().getAuthCreds();
         creds.clear();
         if (username.length() != 0) {
@@ -205,10 +216,12 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
         try {
             account.modify(accCfg);
             Log.d(TAG, "modify account");
-            
+            /*
             if (callbackContext != null) {
                 callbackContext.success("Successfully registered");
             }
+            return true;
+            */
             return true;
         } catch (Exception e) {
             if (callbackContext != null) {
@@ -254,9 +267,64 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
     }
 
 
+    public void makeFilesCall(final String number, final ArrayList<String> playlist, 
+                            final PlayOption option, final CallbackContext callbackContext) {
+    
+        if (currentCall != null ){
+            Log.w(TAG,"There is already a call");
+            return;
+        }
+
+        String systemIP=userSettings.get("systemIP");
+        String buddy_uri = "sip:"+number+"@"+systemIP;
+
+        outGoingCallNumber = number;
+     
+        Log.i(TAG,"A call will be made to:"+buddy_uri);
+
+        for (String song : playlist) {
+            Log.i(TAG, "Playlist song will add:" + song);
+        }
+
+        app.checkThread();
+        PlaylistCall call = new PlaylistCall(account, -1, playlist, option);
+        CallOpParam prm = new CallOpParam(true);
+
+        try {
+            call.makeCall(buddy_uri, prm);
+            callbackContext.success();
+
+        } catch (Exception e) {
+            call.delete();
+            e.printStackTrace();
+            callbackContext.error(e.toString());
+            return;
+        }
+
+        currentCall = call;
+        
+    }
+
+    public void changePlayingSong(int index, final CallbackContext callbackContext) {
+        if (currentCall instanceof PlaylistCall) {
+            PlaylistCall call = (PlaylistCall) currentCall;
+            call.setPlaySong(index);
+            callbackContext.success();
+        }
+    }
+
+    public void changeFilesCallRepeatType(final int type, final CallbackContext callbackContext) {
+        if (currentCall instanceof PlaylistCall) {
+            PlaylistCall call = (PlaylistCall) currentCall;
+            call.setRepeatType(type);
+        }
+
+        callbackContext.success();
+    }
+
     public void sendDTMF(final String num,final CallbackContext callbackContext) {
 
-        if (currentCall != null){
+        if (currentCall != null) {
             app.checkThread();
 
             try {
@@ -351,6 +419,48 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
 
     }
 
+    public static synchronized void sendInstantMessage(final String buddy, final String message, final CallbackContext callbackContext) {
+        MyApp.checkThread();
+
+        String serverIp = userSettings.get("systemIP");
+        String buddyUrl = "sip:" + buddy + "@" + serverIp;
+        
+        try {
+            MyBuddy bud = account.getBuddy(buddyUrl);
+            if (bud == null) {
+                callbackContext.error("Can not found buddy");
+                return;
+            }
+    
+            Log.d(TAG, "sendInstantMessage " + message + " to " + buddyUrl);
+            SendInstantMessageParam param = new SendInstantMessageParam();
+            param.setContent(message);
+            bud.sendInstantMessage(param);
+            callbackContext.success();    
+        } catch (Exception e) {
+            callbackContext.error(e.toString());
+        }
+    }
+
+    public static void addBuddy(final String buddy){
+        String serverIp = userSettings.get("systemIP");
+        BuddyConfig cfg = new BuddyConfig();
+        cfg.setUri("sip:" + buddy + "@" + serverIp);
+        cfg.setSubscribe(true);
+        account.addBuddy(cfg);
+    }
+
+    public static void deleteBuddy(final String buddy){
+        String serverIp = userSettings.get("systemIP");
+        String buddyUri = "sip:" + buddy + "@" + serverIp;
+        try {
+            account.deleteBuddy(buddyUri);
+        } catch (Exception e) {
+            //callbackContext.error(e.toString());
+        }
+        
+    }
+
     @Override
     public boolean handleMessage(Message m) {
 
@@ -379,7 +489,6 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
      ***  MyAppObserver ***
      *********************/
     public synchronized void notifyRegState(pjsip_status_code code, String reason, int expiration){
-        app.checkThread();
         Log.d(TAG,"========notifyRegState========"+"Code:"+code+", reason:"+reason+", expiration:"+expiration);
         /*
         if (mCallbackContext != null) {
@@ -411,10 +520,6 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
             return;
         }
 
-
-
-
-
         scAudioManager scAudio = scAudioManager.getInstance();
         scAudio.startRingtone();
 
@@ -438,8 +543,6 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
 
     };
     public synchronized void notifyCallState(MyCall call){
-
-
         app.checkThread();
 
         CallInfo ci;
@@ -451,21 +554,24 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
 
         String call_state = "";
 
+        Log.d(TAG,"======notifyCallState, " + ci.getState().swigValue() + ", " + ci.getRole());
 
         if (ci.getState().swigValue() < pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED.swigValue()) {
 
             if (ci.getRole() == pjsip_role_e.PJSIP_ROLE_UAS) {
                 Log.d(TAG,"======notifyCallState======Incoming call");
-                utils.executeJavascript("cordova.plugins.PJSIP.callState({state:'incall',inComingCallNumber:'"+inComingCallNumber+"'})");
-
+                if  (ci.getState().swigValue() == pjsip_inv_state.PJSIP_INV_STATE_EARLY.swigValue()){
+                    Log.d(TAG,"======notifyCallState======PJSIP_INV_STATE_EARLY");
+                    utils.executeJavascript("cordova.plugins.PJSIP.callState({state:'incall',inComingCallNumber:'"+inComingCallNumber+"'})");
+                }
 		/* Default button texts are already 'Accept' & 'Reject' */
-            } else if (ci.getRole() == pjsip_role_e.PJSIP_ROLE_UAC){
+            } else if (ci.getRole() == pjsip_role_e.PJSIP_ROLE_UAC) {
 
                 if  (ci.getState().swigValue() == pjsip_inv_state.PJSIP_INV_STATE_CALLING.swigValue()){
-                    scAudioManager scAudio = scAudioManager.getInstance();
-                    scAudio.startRingbackTone();
                     //scAudioManager scAudio = scAudioManager.getInstance();
-                    //scAudio.startRingtone();
+                    //scAudio.startRingbackTone();
+                    scAudioManager scAudio = scAudioManager.getInstance();
+                    scAudio.startRingtone();
 
                     utils.executeJavascript("cordova.plugins.PJSIP.callState({state:'outcall',outGoingCallNumber:'"+outGoingCallNumber+"'})");
                     Log.d(TAG,"======notifyCallState======PJSIP_INV_STATE_CALLING");
@@ -474,8 +580,6 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
                 }else if  (ci.getState().swigValue() == pjsip_inv_state.PJSIP_INV_STATE_CONNECTING.swigValue()){
                     Log.d(TAG,"======notifyCallState======PJSIP_INV_STATE_CONNECTING");
                 }
-
-
             }
         }
         else if (ci.getState().swigValue() >= pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED.swigValue()) {
@@ -506,11 +610,42 @@ public class PjsipActivity implements Handler.Callback,MyAppObserver {
     };
     public void notifyBuddyState(MyBuddy buddy){
         Log.d(TAG,"=======notifyBuddyState=========");
+        MyApp.checkThread();
+        
+        try {
+            BuddyInfo bi = buddy.getInfo();
+            Log.d(TAG, "uri:" + bi.getUri());
+            Log.d(TAG, "state:" + bi.getPresStatus().getStatusText());
+            Log.d(TAG, "note:" + bi.getPresStatus().getNote());
 
+            utils.executeJavascript("cordova.plugins.PJSIP.buddyState({uri:'" + bi.getUri() + 
+                                    "',state:'" + bi.getPresStatus().getStatusText() +
+                                    "',note:'" + bi.getPresStatus().getNote() + "'})");
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+ 
     };
+
+    public void notifyInstantMessage(OnInstantMessageParam prm)
+    {
+        Log.d(TAG,"=======notifyInstantMessage=========");
+
+        MyApp.checkThread();
+
+        utils.executeJavascript("cordova.plugins.PJSIP.instantMessage({from:'" + prm.getFromUri() + 
+                                "',message:'" + prm.getMsgBody() + "'})");
+    }
 
     public Boolean isConnected() {
         return false;
     }
 
+    
+    public void notifyPlayStatus(String type, int index, int param) {
+        MyApp.checkThread();
+        utils.executeJavascript("cordova.plugins.PJSIP.playStatus({type:'" + type + 
+            "',index:'" + index + "',param:'" + param + "'})");
+    }
+    
 }
