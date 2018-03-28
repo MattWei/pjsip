@@ -17,6 +17,9 @@ import org.pjsip.pjsua2.BuddyConfig;
 import org.pjsip.pjsua2.PresenceStatus;
 import org.pjsip.pjsua2.BuddyInfo;
 import org.pjsip.pjsua2.OnInstantMessageParam;
+import org.pjsip.pjsua2.SipHeader;
+import org.pjsip.pjsua2.SipHeaderVector;
+import org.pjsip.pjsua2.SipTxOption;
 
 import android.Manifest;
 import android.app.Activity;
@@ -267,8 +270,8 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
     }
 
 
-    public void makeFilesCall(final String number, final ArrayList<String> playlist, 
-                            final PlayOption option, final CallbackContext callbackContext) {
+    public void makeFilesCall(final String number, final String songPath, 
+                            /*final PlayOption option, */ final String callOption, final CallbackContext callbackContext) {
     
         if (currentCall != null ){
             Log.w(TAG,"There is already a call");
@@ -281,14 +284,23 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
         outGoingCallNumber = number;
      
         Log.i(TAG,"A call will be made to:"+buddy_uri);
-
+/*
         for (String song : playlist) {
             Log.i(TAG, "Playlist song will add:" + song);
         }
-
+*/
         app.checkThread();
-        PlaylistCall call = new PlaylistCall(account, -1, playlist, option);
+        PlaylistCall call = new PlaylistCall(account, -1, songPath/*, option*/);
+
         CallOpParam prm = new CallOpParam(true);
+        SipHeader sipHeader = new SipHeader();
+        sipHeader.setHName("AppMessage");
+        sipHeader.setHValue(callOption);
+        SipHeaderVector sipHeaderVector = new SipHeaderVector();
+        sipHeaderVector.add(sipHeader);
+        SipTxOption sipTxOption = new SipTxOption();
+        sipTxOption.setHeaders(sipHeaderVector);
+        prm.setTxOption(sipTxOption);
 
         try {
             call.makeCall(buddy_uri, prm);
@@ -305,14 +317,15 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
         
     }
 
-    public void changePlayingSong(int index, final CallbackContext callbackContext) {
+    public void changePlayingSong(final String songPath, final CallbackContext callbackContext) {
         if (currentCall instanceof PlaylistCall) {
             PlaylistCall call = (PlaylistCall) currentCall;
-            call.setPlaySong(index);
+            call.setPlaySong(songPath);
             callbackContext.success();
         }
     }
 
+    /*
     public void changeFilesCallRepeatType(final int type, final CallbackContext callbackContext) {
         if (currentCall instanceof PlaylistCall) {
             PlaylistCall call = (PlaylistCall) currentCall;
@@ -322,6 +335,45 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
         callbackContext.success();
     }
 
+    public void addMusicsToPlaylistCall(final ArrayList<String> songs, final CallbackContext callbackContext) {
+        if (currentCall instanceof PlaylistCall) {
+            PlaylistCall call = (PlaylistCall) currentCall;
+            if (call.addMusic(songs)) {
+                callbackContext.success();
+            } else {
+                callbackContext.error("Add music false");
+            }
+        }
+
+        callbackContext.error("Not playing music");
+    }
+
+    public void deleteMusicFromPlaylistCall(final int index, final CallbackContext callbackContext) {
+        if (currentCall instanceof PlaylistCall) {
+            PlaylistCall call = (PlaylistCall) currentCall;
+            if (call.deleteMusic(index)) {
+                callbackContext.success();
+            } else {
+                callbackContext.error("Delete music false");
+            }
+        }
+
+        callbackContext.error("Not playing music");
+    }
+
+    public void reorderMusic(final int from, final int to, final CallbackContext callbackContext) {
+        if (currentCall instanceof PlaylistCall) {
+            PlaylistCall call = (PlaylistCall) currentCall;
+            if (call.reorderMusic(from, to)) {
+                callbackContext.success();
+            } else {
+                callbackContext.error("Reorder music false");
+            }
+        }
+
+        callbackContext.error("Not playing music");
+    }
+    */
     public void sendDTMF(final String num,final CallbackContext callbackContext) {
 
         if (currentCall != null) {
@@ -339,8 +391,6 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
 
         }
     }
-
-
 
     public void holdCall(final Boolean isActive,final CallbackContext callbackContext) {
 
@@ -419,7 +469,8 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
 
     }
 
-    public static synchronized void sendInstantMessage(final String buddy, final String message, final CallbackContext callbackContext) {
+    public static synchronized void sendInstantMessage(final String buddy, final String message, 
+                                                        final CallbackContext callbackContext) {
         MyApp.checkThread();
 
         String serverIp = userSettings.get("systemIP");
@@ -538,11 +589,9 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
             Log.e(TAG, e.toString());
         }
 
-
         currentCall = call;
-
     };
-    public synchronized void notifyCallState(MyCall call){
+    public synchronized void notifyCallState(MyCall call) {
         app.checkThread();
 
         CallInfo ci;
@@ -604,9 +653,6 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
     };
     public void notifyCallMediaState(MyCall call){
         Log.d(TAG,"======notifyCallMediaState======"+call.toString());
-
-
-
     };
     public void notifyBuddyState(MyBuddy buddy){
         Log.d(TAG,"=======notifyBuddyState=========");
@@ -642,10 +688,10 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
     }
 
     
-    public void notifyPlayStatus(String type, int index, int param) {
+    public void notifyPlayStatus(String type, String song, int param) {
         MyApp.checkThread();
         utils.executeJavascript("cordova.plugins.PJSIP.playStatus({type:'" + type + 
-            "',index:'" + index + "',param:'" + param + "'})");
+            "',index:'" + song + "',param:'" + param + "'})");
     }
     
 }

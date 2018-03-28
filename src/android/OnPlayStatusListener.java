@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 
 public interface OnPlayStatusListener {
-    void onPlayStatusChanged(String statusType, int index, int param);
+    void onPlayStatusChanged(String statusType, String song, int param);
 }

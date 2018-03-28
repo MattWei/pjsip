@@ -21,5 +21,5 @@ interface MyAppObserver
 
     abstract void notifyInstantMessage(OnInstantMessageParam prm);
 
-    abstract void notifyPlayStatus(String type, int index, int param);
+    abstract void notifyPlayStatus(String type, String song, int param);
 }

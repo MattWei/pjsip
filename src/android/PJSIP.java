@@ -386,6 +386,8 @@ public class PJSIP extends CordovaPlugin {
       actions.deleteBuddy(buddy, callbackContext);
     } else if (action.equals("makeFilesCall")) {
       final String account = args.getString(0);
+      final String songPath = args.getString(1);
+/*
       final ArrayList<String> songs = new ArrayList<String>();
       JSONArray jsonSongList = args.getJSONArray(1);
       if (jsonSongList != null) {
@@ -411,18 +413,42 @@ public class PJSIP extends CordovaPlugin {
         Log.d("PJSIP.JAVA", e.getMessage());
       }
       Log.d("PJSIP.JAVA", "Get OptionObject OK");
-
-
-      actions.makeFilesCall(account, songs, playOption, callbackContext);
+*/
+      final String callOption = args.getString(2);
+      actions.makeFilesCall(account, songPath, /*playOption, */callOption, callbackContext);
     } else if (action.equals("changePlayingSong")) {
-      final int index = Integer.parseInt(args.getString(0));
-      actions.changePlayingSong(index, callbackContext);
-    } else if (action.equals("changeFilesCallRepeatType")) {
+      final String song = args.getString(0);
+      actions.changePlayingSong(song, callbackContext);
+    } 
+ /*
+    else if (action.equals("changeFilesCallRepeatType")) {
       final int type = Integer.parseInt(args.getString(0));
       Log.d("PJSIP.JAVA", "Change repead type to " + type);
       actions.changeFilesCallRepeatType(type, callbackContext);
-    }
+    } else if (action.equals("addMusicsToPlaylistCall")) {
+      final ArrayList<String> songs = new ArrayList<String>();
+      JSONArray jsonSongList = args.getJSONArray(0);
+      if (jsonSongList != null) {
+        int len = jsonSongList.length();
+        for (int i = 0; i < len; ++i) {
+          songs.add(jsonSongList.get(i).toString());
+        }
+      }
 
+      if (songs.size() > 0) {
+        actions.addMusicsToPlaylistCall(songs, callbackContext);
+      } else {
+        callbackContext.error("No music");
+      }
+    } else if (action.equals("deleteMusicFromPlaylistCall")) {
+      final int index = Integer.parseInt(args.getString(0));
+      actions.deleteMusicFromPlaylistCall(index, callbackContext);
+    } else if (action.equals("reorderMusic")) {
+      final int from = Integer.parseInt(args.getString(0));
+      final int to = Integer.parseInt(args.getString(1));
+      actions.reorderMusic(from, to, callbackContext);
+    }
+    */
     return true;
 
   }

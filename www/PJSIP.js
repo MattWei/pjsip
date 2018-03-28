@@ -142,12 +142,13 @@ PJSIP.prototype.changePlayingSong = function(arg0, success, error) {
     exec(success, error, "PJSIP", "changePlayingSong", [arg0]);
 }
 
+/*
 PJSIP.prototype.changeFilesCallRepeatType = function(arg0, success, error) {
     exec(success, error, "PJSIP", "changeFilesCallRepeatType", [arg0]);
 };
 
-PJSIP.prototype.addMusicesToPlaylistCall = function(arg0, success, error) {
-    exec(success, error, "PJSIP", "addMusicesToPlaylistCall", [arg0]);
+PJSIP.prototype.addMusicsToPlaylistCall = function(arg0, success, error) {
+    exec(success, error, "PJSIP", "addMusicsToPlaylistCall", [arg0]);
 };
 
 PJSIP.prototype.deleteMusicFromPlaylistCall= function(arg0, success, error) {
@@ -157,9 +158,7 @@ PJSIP.prototype.deleteMusicFromPlaylistCall= function(arg0, success, error) {
 PJSIP.prototype.reorderMusic= function(arg0, arg1, success, error) {
     exec(success, error, "PJSIP", "reorderMusic", [arg0, arg1]);
 }
-
-
-
+*/
 PJSIP.prototype.playStatus = function(arg0, success, error) {
     switch (arg0.type){
       case "Start":

@@ -87,7 +87,8 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
 
     }
 
-    public synchronized Boolean connect(final String user, final String pass, final String domain,final String proxy, final CallbackContext callbackContext){
+    public synchronized Boolean connect(final String user, final String pass, final String domain,
+                                        final String proxy, final CallbackContext callbackContext){
 
 
         return pjsipActivity.connect(user,pass,domain,proxy, callbackContext);
@@ -229,19 +230,19 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
         }
     }
 
-    public synchronized void makeFilesCall(final String number, final ArrayList<String> playlist, 
-                                        final PlayOption option, final CallbackContext callbackContext){
+    public synchronized void makeFilesCall(final String number, final String songPath, 
+                                        /*final PlayOption option, */final String callOption, final CallbackContext callbackContext){
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                pjsipActivity.makeFilesCall(number, playlist, option, callbackContext);
+                pjsipActivity.makeFilesCall(number, songPath, /*option, */callOption, callbackContext);
             }
         });
     }
 
-    public void changePlayingSong(final int index, final CallbackContext callbackContext) {
+    public void changePlayingSong(final String songPath, final CallbackContext callbackContext) {
         try{
-            pjsipActivity.changePlayingSong(index, callbackContext);
+            pjsipActivity.changePlayingSong(songPath, callbackContext);
             if (callbackContext!=null)
                 callbackContext.success();
         } catch(Exception e){
@@ -249,6 +250,7 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
         }
     }
 
+    /*
     public void changeFilesCallRepeatType(final int type, final CallbackContext callbackContext) {
         try{
             pjsipActivity.changeFilesCallRepeatType(type, callbackContext);
@@ -256,4 +258,29 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
             callbackContext.error(e.toString());
         }
     }
+
+    public void addMusicsToPlaylistCall(final ArrayList<String> songs, final CallbackContext callbackContext) {
+        try {
+            pjsipActivity.addMusicsToPlaylistCall(songs, callbackContext);
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+
+    public void deleteMusicFromPlaylistCall(final int index, final CallbackContext callbackContext) {
+        try {
+            pjsipActivity.deleteMusicFromPlaylistCall(index, callbackContext);
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+    
+    public void reorderMusic(final int from, final int to, final CallbackContext callbackContext) {
+        try {
+            pjsipActivity.reorderMusic(from, to, callbackContext);
+        } catch(Exception e){
+            callbackContext.error(e.toString());
+        }
+    }
+    */
 }

@@ -120,4 +120,17 @@ public class  MyAccount extends Account
 
         MyApp.observer.notifyInstantMessage(prm);
     }
+
+    @Override
+    public void modify(AccountConfig cfg) throws java.lang.Exception  {
+        for (MyBuddy buddy : buddyList) {
+            try {
+                buddy.subscribePresence(false);
+            } catch (Exception e) {}
+
+            delBuddy(buddy);
+        }
+
+        super.modify(cfg);
+    }
 }

@@ -25,7 +25,7 @@
           -->
       </config-file>      
       
-      <framework src="com.android.support:support-v4:+" />
+      <framework src="com.android.support:support-v4:27.1.0" />
       <source-file src="www/sounds/mp3/busytone.mp3" target-dir="app/src/main/res/raw/" />
       <source-file src="www/sounds/mp3/dtmf0.mp3" target-dir="app/src/main/res/raw/" />
       <source-file src="www/sounds/mp3/dtmf1.mp3" target-dir="app/src/main/res/raw/" />

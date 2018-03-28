@@ -17,7 +17,6 @@ import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsua2;
 import org.pjsip.pjsua2.pjsua_call_media_status;
 
-
 import gr.navarino.cordova.plugin.MyApp;
 import gr.navarino.cordova.plugin.MyAccount;
 import gr.navarino.cordova.plugin.MyCall;
@@ -41,35 +40,86 @@ import android.os.Bundle;
  */
 
 public class PlaylistCall extends MyCall implements OnPlayStatusListener {
-    public VideoWindow vidWin;
-    public VideoPreview vidPrev;
+    //public VideoWindow vidWin;
+    //public VideoPreview vidPrev;
 
-    ArrayList<String> playlist;
+    //String song = new String();
     HonPlayer honPlayer = null;
-    private PlayOption option = null;
-    PlaylistCall(MyAccount acc, int call_id, final ArrayList<String> playlist, PlayOption playOption)
-    {
+    //private PlayOption option = null;
+
+    PlaylistCall(MyAccount acc, int call_id, final String songPath/*, PlayOption playOption*/) {
         super(acc, call_id);
-        this.playlist = playlist;
-        option = playOption;
-        vidWin = null;
+        //this.song = songPath;
+        //Log.d("PlaylistCall", "Songs name:" + this.song);
+        /*
+        Log.d("PlaylistCall", "Songs size:" + playlist.size());
+        for (String songName : playlist) {
+            Log.d("PlaylistCall", "Songs name:" + songName);
+        }
+        */
+        //option = playOption;
+        //vidWin = null;
+
+        this.honPlayer = new HonPlayer(this);
+        //honPlayer.createPlayer(playlist, option);
+        honPlayer.playSong(songPath);
     }
 
-    public void setPlaySong(int index) {
+    public void setPlaySong(final String songPath) {
         if (honPlayer != null) {
-            honPlayer.setPlaySong(index);
+            honPlayer.playSong(songPath);
         }
     }
 
+    /*
     public void setRepeatType(int type) {
         if (honPlayer != null) {
             honPlayer.setRepeatType(type);
         }
     }
-    
+
+    public boolean addMusic(final ArrayList<String> songs) {
+        if (honPlayer != null) {
+            if (honPlayer.addMusics(songs)) {
+                this.playlist.addAll(songs);
+                Log.d("PlaylistCall", "Songs size:" + playlist.size());
+                for (String songName : playlist) {
+                    Log.d("PlaylistCall", "Songs name:" + songName);
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean deleteMusic(final int index) {
+        if (honPlayer != null) {
+            if (honPlayer.deleteMusic(index)) {
+                this.playlist.remove(index);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean reorderMusic(final int from, final int to) {
+        if (honPlayer != null) {
+            if (honPlayer.reorderMusic(from, to)) {
+                String song = this.playlist.get(from);
+                this.playlist.remove(from);
+                this.playlist.add((to - 1), song);
+                return true;
+            }
+        }
+
+        return false;
+    }
+    */
+
     @Override
-    public void onCallMediaState(OnCallMediaStateParam prm)
-    {
+    public void onCallMediaState(OnCallMediaStateParam prm) {
         CallInfo ci;
         try {
             ci = getInfo();
@@ -78,20 +128,15 @@ public class PlaylistCall extends MyCall implements OnPlayStatusListener {
         }
 
         CallMediaInfoVector cmiv = ci.getMedia();
-        Log.d("PlaylistCall", "Create HonPlayer with loopOption:" + option.loopOption + 
-            " listInterval:" + option.listInterval + " songInterval:" + option.songInterval);
+        //Log.d("PlaylistCall", "Create HonPlayer with loopOption:" + option.loopOption + " listInterval:"
+        //        + option.listInterval + " songInterval:" + option.songInterval);
 
-        this.honPlayer = new HonPlayer(this);
-        honPlayer.createPlayer(playlist, option);
-
+        
         for (int i = 0; i < cmiv.size(); i++) {
             CallMediaInfo cmi = cmiv.get(i);
-            if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_AUDIO &&
-                    (cmi.getStatus() ==
-                            pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE ||
-                            cmi.getStatus() ==
-                                    pjsua_call_media_status.PJSUA_CALL_MEDIA_REMOTE_HOLD))
-            {
+            if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_AUDIO
+                    && (cmi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE
+                            || cmi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_REMOTE_HOLD)) {
                 // unfortunately, on Java too, the returned Media cannot be
                 // downcasted to AudioMedia
                 Media m = getMedia(i);
@@ -106,20 +151,44 @@ public class PlaylistCall extends MyCall implements OnPlayStatusListener {
                 } catch (Exception e) {
                     continue;
                 }
-            } else if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_VIDEO &&
-                    cmi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE &&
-                    cmi.getVideoIncomingWindowId() != pjsua2.INVALID_ID)
-            {
+            }
+            /*
+            else if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_VIDEO
+                    && cmi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE
+                    && cmi.getVideoIncomingWindowId() != pjsua2.INVALID_ID) {
                 vidWin = new VideoWindow(cmi.getVideoIncomingWindowId());
                 vidPrev = new VideoPreview(cmi.getVideoCapDev());
             }
+            */
         }
 
         MyApp.observer.notifyCallMediaState(this);
     }
 
     @Override
-    public void onPlayStatusChanged(String statusType, int index, int param) {
-        MyApp.observer.notifyPlayStatus(statusType, index, param);
+    public void onPlayStatusChanged(String statusType, String song, int param) {
+        MyApp.observer.notifyPlayStatus(statusType, song, param);
     }
+
+
+    @Override
+    public void onCallState(OnCallStateParam prm)
+    {
+        MyApp.observer.notifyCallState(this);
+        try {
+            CallInfo ci = getInfo();
+            if (ci.getState() ==
+                    pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED)
+            {
+                if (honPlayer != null) {
+                    Log.d("PlaylistCall", "disconnected");
+                    honPlayer.delete();
+                }
+                this.delete();
+            }
+        } catch (Exception e) {
+            return;
+        }
+    }
+    
 }
