@@ -234,13 +234,13 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
         }
     }
 
-    public void makeCall(final String number, final CallbackContext callbackContext) {
+    public void makeCall(final String number, final String callOption, final CallbackContext callbackContext) {
 
         if (currentCall != null ){
             Log.w(TAG,"There is already a call");
+            callbackContext.error("There is already a call");
             return;
         }
-
 
         String systemIP=userSettings.get("systemIP");
         String buddy_uri = "sip:"+number+"@"+systemIP;
@@ -253,6 +253,15 @@ public class PjsipActivity implements Handler.Callback, MyAppObserver {
         MyCall call = new MyCall(account, -1);
         CallOpParam prm = new CallOpParam(true);
 
+        SipHeader sipHeader = new SipHeader();
+        sipHeader.setHName("AppMessage");
+        sipHeader.setHValue(callOption);
+        SipHeaderVector sipHeaderVector = new SipHeaderVector();
+        sipHeaderVector.add(sipHeader);
+        SipTxOption sipTxOption = new SipTxOption();
+        sipTxOption.setHeaders(sipHeaderVector);
+        prm.setTxOption(sipTxOption);
+        
         try {
 
             call.makeCall(buddy_uri, prm);

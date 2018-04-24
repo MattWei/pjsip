@@ -135,12 +135,12 @@ public class PjsipActions extends CordovaActivity implements ActivityCompat.OnRe
     }
 
 
-    public synchronized void makeCall(final String number, final CallbackContext callbackContext){
+    public synchronized void makeCall(final String number, final String param, final CallbackContext callbackContext){
 
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                pjsipActivity.makeCall(number, callbackContext);
+                pjsipActivity.makeCall(number, param, callbackContext);
             }
         });
 

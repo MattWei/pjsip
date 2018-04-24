@@ -293,9 +293,10 @@ public class PJSIP extends CordovaPlugin {
 
     } else if (action.equals("makecall")) {
       final String number = args.getString(0);
+      final String param = args.getString(1);
 
       actions.setSpeakerMode(false,null);
-      actions.makeCall(number,callbackContext);
+      actions.makeCall(number, param, callbackContext);
 
     } else if (action.equals("acceptcall")) {
 

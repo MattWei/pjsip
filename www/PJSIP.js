@@ -12,9 +12,9 @@ PJSIP.prototype.connect = function(arg0, arg1, arg2, arg3, success, error) {
     exec(success, error, "PJSIP", "connect", [arg0, arg1, arg2, arg3]);
 };
 
-PJSIP.prototype.makeCall = function(arg0, success, error) {
+PJSIP.prototype.makeCall = function(arg0, arg1, success, error) {
     arg0 = arg0.trim().replace(/\.| /g, '');
-    exec(success, error, "PJSIP", "makecall", [arg0]);
+    exec(success, error, "PJSIP", "makecall", [arg0, arg1]);
 };
 
 PJSIP.prototype.endCall = function(success, error) {
